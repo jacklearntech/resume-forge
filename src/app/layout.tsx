@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster"; // Import Toaster
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' }); // Define variable
 
 export const metadata: Metadata = {
-  title: 'ResumeForge - Build Your Resume', // Updated title
+  title: '一站式在线简历生产器', // Updated title
   description: 'Easily create professional resumes using pre-defined templates.', // Updated description
 };
 

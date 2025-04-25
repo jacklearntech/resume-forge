@@ -60,41 +60,71 @@ export default function Home() {
         });
 
         try {
+            // Ensure the preview area is temporarily styled for optimal PDF generation
+            const previewContainer = previewRef.current.parentElement; // Get the container
+            if(previewContainer) {
+                previewContainer.style.maxHeight = 'none'; // Remove max height temporarily
+                previewContainer.style.overflow = 'visible'; // Show all content
+            }
+            previewRef.current.style.width = '210mm'; // Approximate A4 width for layout
+
             const canvas = await html2canvas(previewRef.current, {
                 scale: 2, // Increase scale for better resolution
                 useCORS: true, // Important if using external images like picsum
-                backgroundColor: null, // Use transparent background or element's background
+                backgroundColor: '#ffffff', // Explicit white background for PDF
                 logging: false, // Disable logging for cleaner console
+                width: previewRef.current.scrollWidth, // Use scroll width to capture full width
+                height: previewRef.current.scrollHeight, // Use scroll height to capture full height
+                windowWidth: previewRef.current.scrollWidth,
+                windowHeight: previewRef.current.scrollHeight,
                  onclone: (document) => {
                     // Ensure styles are fully applied before rendering
                     // You might need to handle specific CSS issues here if they arise
                  }
             });
 
+            // Restore original styles after canvas generation
+            if(previewContainer) {
+                previewContainer.style.maxHeight = ''; // Restore max height
+                previewContainer.style.overflow = ''; // Restore overflow
+            }
+             previewRef.current.style.width = ''; // Restore original width
+
+
             const imgData = canvas.toDataURL('image/png');
             // Standard A4 dimensions in points (1pt = 1/72 inch)
             const pdfWidth = 595.28;
             const pdfHeight = 841.89;
-            // Calculate image dimensions maintaining aspect ratio
-            const imgProps = {width: canvas.width, height: canvas.height};
-            const ratio = imgProps.width / imgProps.height;
-            let imgWidth = pdfWidth - 40; // Add some margin
-            let imgHeight = imgWidth / ratio;
 
-            // If image height exceeds page height, scale based on height instead
-             if (imgHeight > pdfHeight - 40) {
-                imgHeight = pdfHeight - 40;
-                imgWidth = imgHeight * ratio;
-            }
+            // Calculate image dimensions maintaining aspect ratio based on canvas size
+             const imgProps = {width: canvas.width, height: canvas.height};
+             const canvasRatio = imgProps.width / imgProps.height;
 
-             // Center the image on the page
-            const x = (pdfWidth - imgWidth) / 2;
-            const y = (pdfHeight - imgHeight) / 2;
+            // Calculate PDF page dimensions based on canvas aspect ratio to fit A4
+            let pageImgWidth = pdfWidth;
+            let pageImgHeight = pageImgWidth / canvasRatio;
 
+             // If calculated height exceeds A4 height, scale based on height instead
+            if (pageImgHeight > pdfHeight) {
+                pageImgHeight = pdfHeight;
+                pageImgWidth = pageImgHeight * canvasRatio;
+             }
 
-            const pdf = new jsPDF('p', 'pt', 'a4');
-            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+            const pdf = new jsPDF({
+                orientation: pageImgWidth > pageImgHeight ? 'l' : 'p', // Auto orientation
+                unit: 'pt',
+                format: 'a4'
+            });
+
+             // Add image centered (optional, or just top-left)
+            const xOffset = (pdf.internal.pageSize.getWidth() - pageImgWidth) / 2;
+            const yOffset = 0; // Start from top
+
+            pdf.addImage(imgData, 'PNG', xOffset, yOffset, pageImgWidth, pageImgHeight);
+
+            // Save the PDF
             pdf.save(`${resumeData.name.replace(/\s+/g, '_')}_${selectedTemplate}_Resume.pdf`);
+
             toast({
                 title: "PDF Exported Successfully!",
                 description: "Your resume PDF has been downloaded.",
@@ -104,10 +134,19 @@ export default function Home() {
              toast({
                 variant: "destructive",
                 title: "PDF Export Failed",
-                description: "There was an error generating the PDF. Please try again.",
+                description: "There was an error generating the PDF. Please check console for details.",
             });
         } finally {
             setIsExporting(false);
+             // Ensure styles are restored even if there's an error
+            const previewContainer = previewRef.current?.parentElement;
+            if(previewContainer) {
+                previewContainer.style.maxHeight = '';
+                previewContainer.style.overflow = '';
+            }
+             if(previewRef.current) {
+                 previewRef.current.style.width = '';
+             }
         }
     };
 
@@ -116,7 +155,7 @@ export default function Home() {
   return (
     <main className="container mx-auto p-4 md:p-8 min-h-screen">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-2">ResumeForge</h1>
+        <h1 className="text-4xl font-bold text-primary mb-2">一站式在线简历生产器</h1>
         <p className="text-lg text-muted-foreground">Craft your professional resume with ease.</p>
       </header>
 
@@ -169,7 +208,8 @@ export default function Home() {
               <CardContent>
                 <div id="resume-preview-container" className="mt-4 border rounded-lg p-4 bg-white shadow-inner overflow-auto max-h-[80vh]">
                    {/* The ref is now on the inner div which contains the actual template */}
-                   <div ref={previewRef} className="bg-white">
+                   {/* Added explicit bg-white and min-w-[210mm] for better PDF rendering */}
+                   <div ref={previewRef} className="bg-white min-w-[210mm] p-0">
                      {isPending ? (
                        <div className="flex justify-center items-center h-96">
                          <p>Loading Preview...</p>
@@ -185,7 +225,7 @@ export default function Home() {
         </div>
       </div>
         <footer className="text-center mt-12 text-sm text-muted-foreground">
-            Built with Next.js and ShadCN UI. © {new Date().getFullYear()} ResumeForge.
+            Built with Next.js and ShadCN UI. © {new Date().getFullYear()} 一站式在线简历生产器.
         </footer>
     </main>
   );
