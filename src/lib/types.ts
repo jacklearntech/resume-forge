@@ -25,4 +25,4 @@ export type TemplateComponentProps = {
   data: ResumeData;
 };
 
-export type TemplateKey = 'classic' | 'modern';
+export type TemplateKey = 'classic' | 'modern' | 'creative' | 'minimalist';
