@@ -155,7 +155,7 @@ export default function Home() {
   return (
     <main className="container mx-auto p-4 md:p-8 min-h-screen">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-2">一站式在线简历生产器</h1>
+        <h1 className="text-4xl font-bold text-primary mb-2">一站式在线简历生成器</h1>
         <p className="text-lg text-muted-foreground">Craft your professional resume with ease.</p>
       </header>
 
@@ -225,7 +225,7 @@ export default function Home() {
         </div>
       </div>
         <footer className="text-center mt-12 text-sm text-muted-foreground">
-            Built with Next.js and ShadCN UI. © {new Date().getFullYear()} 一站式在线简历生产器.
+            Built with Next.js and ShadCN UI. © {new Date().getFullYear()} 一站式在线简历生成器.
         </footer>
     </main>
   );
