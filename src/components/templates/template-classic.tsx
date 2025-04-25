@@ -14,16 +14,7 @@ export function TemplateClassic({ data }: TemplateComponentProps) {
           <span className="flex items-center"><Mail className="mr-1 h-4 w-4" />{data.email}</span>
           <span className="flex items-center"><Phone className="mr-1 h-4 w-4" />{data.phone}</span>
           <span className="flex items-center"><MapPin className="mr-1 h-4 w-4" />{data.address}</span>
-          {data.linkedin && (
-            <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-              <Linkedin className="mr-1 h-4 w-4" />LinkedIn
-            </a>
-          )}
-          {data.portfolio && (
-            <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-              <LinkIcon className="mr-1 h-4 w-4" />Portfolio
-            </a>
-          )}
+          {/* Links moved to bottom */}
         </div>
       </CardHeader>
       <CardContent className="p-8 space-y-6">
@@ -74,6 +65,32 @@ export function TemplateClassic({ data }: TemplateComponentProps) {
               ))}
             </div>
         </section>
+
+        { (data.linkedin || data.portfolio) && <Separator /> }
+
+        {/* Links Section */}
+        <section>
+          <h2 className="text-xl font-semibold text-primary mb-3 border-b pb-1">Links</h2>
+          <div className="space-y-2 text-sm">
+             {data.linkedin && (
+                <div className="flex items-center">
+                    <Linkedin className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                        {data.linkedin}
+                    </a>
+                </div>
+            )}
+            {data.portfolio && (
+                 <div className="flex items-center">
+                    <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                        {data.portfolio}
+                    </a>
+                </div>
+            )}
+          </div>
+        </section>
+
       </CardContent>
     </Card>
   );

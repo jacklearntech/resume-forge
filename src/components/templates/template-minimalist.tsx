@@ -1,7 +1,7 @@
 import type { TemplateComponentProps } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, ExternalLink } from 'lucide-react';
 
 export function TemplateMinimalist({ data }: TemplateComponentProps) {
   const skillsArray = data.skills.split(',').map(skill => skill.trim()).filter(Boolean);
@@ -16,16 +16,7 @@ export function TemplateMinimalist({ data }: TemplateComponentProps) {
             <span className="flex items-center"><Mail className="mr-1 h-3 w-3" />{data.email}</span>
             <span className="flex items-center"><Phone className="mr-1 h-3 w-3" />{data.phone}</span>
             <span className="flex items-center"><MapPin className="mr-1 h-3 w-3" />{data.address}</span>
-            {data.linkedin && (
-                <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-                <Linkedin className="mr-1 h-3 w-3" />LinkedIn
-                </a>
-            )}
-            {data.portfolio && (
-                <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-                <LinkIcon className="mr-1 h-3 w-3" />Portfolio
-                </a>
-            )}
+             {/* Links moved to bottom */}
             </div>
         </header>
 
@@ -82,6 +73,33 @@ export function TemplateMinimalist({ data }: TemplateComponentProps) {
               {skillsArray.join(' · ')}
           </p>
         </section>
+
+        { (data.linkedin || data.portfolio) && <Separator className="bg-border/50"/> }
+
+         {/* Links Section */}
+        {(data.linkedin || data.portfolio) && (
+            <section>
+            <h2 className="text-lg font-semibold text-primary tracking-wide mb-3 uppercase">Links</h2>
+            <div className="space-y-2 text-sm font-light">
+                 {data.linkedin && (
+                    <div className="flex items-center">
+                        <Linkedin className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                            {data.linkedin}
+                        </a>
+                    </div>
+                )}
+                {data.portfolio && (
+                     <div className="flex items-center">
+                        <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                             {data.portfolio}
+                        </a>
+                    </div>
+                )}
+            </div>
+            </section>
+        )}
       </CardContent>
     </Card>
   );

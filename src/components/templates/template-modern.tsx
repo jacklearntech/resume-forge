@@ -1,7 +1,8 @@
 import type { TemplateComponentProps } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, Briefcase, GraduationCap, Wrench } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, Briefcase, GraduationCap, Wrench, ExternalLink } from 'lucide-react';
+import { Separator } from '../ui/separator';
 
 export function TemplateModern({ data }: TemplateComponentProps) {
   const skillsArray = data.skills.split(',').map(skill => skill.trim()).filter(Boolean);
@@ -23,16 +24,7 @@ export function TemplateModern({ data }: TemplateComponentProps) {
           <p className="flex items-center"><Mail className="mr-2 h-4 w-4 flex-shrink-0" /><span>{data.email}</span></p>
           <p className="flex items-center"><Phone className="mr-2 h-4 w-4 flex-shrink-0" /><span>{data.phone}</span></p>
           <p className="flex items-start"><MapPin className="mr-2 h-4 w-4 flex-shrink-0 mt-1" /><span>{data.address}</span></p>
-           {data.linkedin && (
-            <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-              <Linkedin className="mr-2 h-4 w-4 flex-shrink-0" />LinkedIn
-            </a>
-          )}
-          {data.portfolio && (
-            <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary">
-              <LinkIcon className="mr-2 h-4 w-4 flex-shrink-0" />Portfolio
-            </a>
-          )}
+           {/* Links moved to bottom */}
         </div>
 
         <div className="mt-6 space-y-3">
@@ -74,7 +66,7 @@ export function TemplateModern({ data }: TemplateComponentProps) {
           </div>
         </section>
 
-        <section>
+        <section className="mb-6">
           <h2 className="text-xl font-semibold text-primary mb-3 flex items-center"><GraduationCap className="mr-2 h-5 w-5" />Education</h2>
           <div className="space-y-4 border-l-2 border-primary pl-4 relative">
             {/* Vertical line decoration */}
@@ -89,6 +81,31 @@ export function TemplateModern({ data }: TemplateComponentProps) {
             ))}
           </div>
         </section>
+
+         { (data.linkedin || data.portfolio) && (
+            <section>
+                 <h2 className="text-xl font-semibold text-primary mb-3 flex items-center"><ExternalLink className="mr-2 h-5 w-5" /> Links</h2>
+                 <div className="space-y-2 text-sm pl-4">
+                    {data.linkedin && (
+                        <div className="flex items-center">
+                            <Linkedin className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                                LinkedIn Profile
+                            </a>
+                        </div>
+                    )}
+                    {data.portfolio && (
+                        <div className="flex items-center">
+                            <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                                Portfolio Website
+                            </a>
+                        </div>
+                    )}
+                 </div>
+            </section>
+        )}
+
       </div>
     </Card>
   );

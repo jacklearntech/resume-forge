@@ -1,7 +1,7 @@
 import type { TemplateComponentProps } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, Briefcase, GraduationCap, Sparkles, Paintbrush } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, Briefcase, GraduationCap, Sparkles, Paintbrush, ExternalLink } from 'lucide-react';
 
 export function TemplateCreative({ data }: TemplateComponentProps) {
   const skillsArray = data.skills.split(',').map(skill => skill.trim()).filter(Boolean);
@@ -25,16 +25,7 @@ export function TemplateCreative({ data }: TemplateComponentProps) {
                     <p className="flex items-start"><Mail className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0" /><span>{data.email}</span></p>
                     <p className="flex items-start"><Phone className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0" /><span>{data.phone}</span></p>
                     <p className="flex items-start"><MapPin className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0" /><span>{data.address}</span></p>
-                     {data.linkedin && (
-                        <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-start hover:text-primary">
-                        <Linkedin className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0" /><span>LinkedIn</span>
-                        </a>
-                    )}
-                    {data.portfolio && (
-                        <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-start hover:text-primary">
-                        <LinkIcon className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0" /><span>Portfolio</span>
-                        </a>
-                    )}
+                     {/* Links moved to bottom */}
                 </div>
             </div>
 
@@ -88,6 +79,31 @@ export function TemplateCreative({ data }: TemplateComponentProps) {
                     ))}
                 </div>
             </section>
+
+            { (data.linkedin || data.portfolio) && (
+                 <section>
+                    <h2 className="text-xl font-semibold text-primary mb-3 flex items-center"><ExternalLink className="mr-2 h-5 w-5" /> Links</h2>
+                    <div className="space-y-2 text-sm pl-5">
+                       {data.linkedin && (
+                           <div className="flex items-center">
+                                <Linkedin className="mr-2 h-4 w-4 text-muted-foreground" />
+                                <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                                    LinkedIn Profile
+                                </a>
+                           </div>
+                        )}
+                        {data.portfolio && (
+                            <div className="flex items-center">
+                                <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                                <a href={data.portfolio} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline break-all">
+                                    Portfolio Website
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
+
 
         </div>
       </CardContent>
